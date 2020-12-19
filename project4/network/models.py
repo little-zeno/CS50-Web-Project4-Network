@@ -18,8 +18,11 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tweeter")
     likes = models.ManyToManyField(User, related_name="post_like")
 
-    def __str__(self):
-        return f"{self.author} posted {self.post_text[:7]} on {self.pub_date}."
+    def serialize(self):
+        return {
+            "id": self.id,
+            "count": self.likes.count()
+        }
 
     class Meta:
         ordering = ['-pub_date']

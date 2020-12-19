@@ -22,18 +22,18 @@ def home(request):
 
     liked = Post.objects.filter(likes = request.user)
 
-    if 'post_id' in request.POST:
-        post_id = request.POST.get('post_id')
-        print(post_id)
-        current_post = Post.objects.get(id=post_id)
-        user_in_like = request.user in current_post.likes.all()
-        print(current_post.likes.all())
-        if user_in_like:
-            current_post.likes.remove(request.user)
-            return HttpResponseRedirect(reverse("home"))
-        else:
-            current_post.likes.add(request.user)
-            return HttpResponseRedirect(reverse("home"))
+    # if 'post_id' in request.POST:
+    #     post_id = request.POST.get('post_id')
+    #     print(post_id)
+    #     current_post = Post.objects.get(id=post_id)
+    #     user_in_like = request.user in current_post.likes.all()
+    #     print(current_post.likes.all())
+    #     if user_in_like:
+    #         current_post.likes.remove(request.user)
+    #         return HttpResponseRedirect(reverse("home"))
+    #     else:
+    #         current_post.likes.add(request.user)
+    #         return HttpResponseRedirect(reverse("home"))
     
     return render(request, "network/home.html", {"page_obj": page_obj, "liked":liked})
 
@@ -71,19 +71,19 @@ def profile(request, name):
     
     # Like function
     liked = Post.objects.filter(likes = request.user)
-    if 'post_id' in request.POST:
-        post_id = request.POST.get('post_id')
-        print(post_id)
-        current_post = Post.objects.get(id=post_id)
-        # post_author = current_post.author
-        user_in_like = request.user in current_post.likes.all()
-        print(current_post.likes.all())
-        if user_in_like:
-            current_post.likes.remove(request.user)
-            return HttpResponseRedirect(reverse("profile", args=[name]))
-        else:
-            current_post.likes.add(request.user)
-            return HttpResponseRedirect(reverse("profile", args=[name]))    
+    # if 'post_id' in request.POST:
+    #     post_id = request.POST.get('post_id')
+    #     print(post_id)
+    #     current_post = Post.objects.get(id=post_id)
+    #     # post_author = current_post.author
+    #     user_in_like = request.user in current_post.likes.all()
+    #     print(current_post.likes.all())
+    #     if user_in_like:
+    #         current_post.likes.remove(request.user)
+    #         return HttpResponseRedirect(reverse("profile", args=[name]))
+    #     else:
+    #         current_post.likes.add(request.user)
+    #         return HttpResponseRedirect(reverse("profile", args=[name]))    
     return render(request, "network/profile.html", {"page_obj": page_obj, "following":profile_following, "followers": profile_followers, "liked": liked, "profile_user": profile_user, "logged_in_user": request.user, "follow_check": follow_check})
 
 
@@ -117,6 +117,24 @@ def edit(request, post_id):
             edit_post.post_text = data["post_text"]
         edit_post.save()
         return HttpResponse(status=204)
+
+@csrf_exempt
+def like_action(request, post_id):
+    post = Post.objects.get(id = post_id)
+    user_in_like = request.user in post.likes.all()
+
+    if request.method == "POST":
+        data = json.loads(request.body)
+        if data.get("likes") is not None:
+            if user_in_like:
+                post.likes.remove(request.user)
+                post.save()
+            else:
+                post.likes.add(request.user)
+                post.save()
+    return JsonResponse(post.serialize())
+  
+        
 
 def login_view(request):
     if request.method == "POST":

@@ -1,13 +1,9 @@
-// document.addEventListener('DOMContentLoaded', function() {
-//     document.querySelector('#edit-post').onclick = () => edit(this.value)
-// });
-
 function edit(id) {
     console.log(id);
-    var composeText = document.querySelector(`#compose-view-${id}`);
-    var composeSubmit = document.querySelector(`#compose-submit-${id}`);
-    var existText = document.querySelector(`#post-text-${id}`);
-    var editPostButton = document.querySelector(`#edit-post-${id}`);
+    const composeText = document.querySelector(`#compose-view-${id}`);
+    const composeSubmit = document.querySelector(`#compose-submit-${id}`);
+    const existText = document.querySelector(`#post-text-${id}`);
+    const editPostButton = document.querySelector(`#edit-post-${id}`);
     composeSubmit.style.display = 'block';
     composeText.style.display = 'block';
     existText.style.display = 'none';
@@ -29,7 +25,39 @@ function edit(id) {
         existText.style.display = 'block';
         editPostButton.style.display = 'block';
 
-        document.querySelector(`#post-text-${id}`).innerHTML = composeText.value; 
+        existText.innerHTML = composeText.value; 
     }
 
 };
+
+
+
+function like(id) {
+    console.log(id);
+    const likeButton = document.querySelector(`#like-button-${id}`);
+    const likeSvg = document.querySelector(`#like-svg-${id}`);
+    const likeCount = document.querySelector(`#like-count-${id}`);
+
+    console.log(likeButton.value);
+    
+
+
+    fetch(`/like/${id}`, {
+        method : 'POST',
+        body: JSON.stringify({
+            likes: likeButton.value
+        })
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log(result.count);
+        likeCount.innerHTML = `${result.count}Like(s)`;
+    });
+
+    if (likeSvg.style.fill == 'red') {
+        likeSvg.style.fill = "black";
+    } else {
+        likeSvg.style.fill = "red";
+    }
+};
+
