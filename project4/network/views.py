@@ -134,7 +134,19 @@ def like_action(request, post_id):
                 post.save()
     return JsonResponse(post.serialize())
   
-        
+@login_required(login_url = '/login')
+def following(request):
+    all_followings = Follow.objects.get(user = request.user.id).follow_person.all()
+    print(all_followings)
+    all_followings_posts = Post.objects.filter(author__in = all_followings)
+    paginator = Paginator(all_followings_posts, 5)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    liked = Post.objects.filter(likes = request.user)
+    
+    return render(request, "network/home.html", {"page_obj": page_obj, "liked":liked})
 
 def login_view(request):
     if request.method == "POST":

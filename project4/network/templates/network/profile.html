@@ -14,21 +14,21 @@
         <h1 class="display-4 font-italic">{{user.username}}</h1>
         <p class="btn btn-sm btn-outline-primary">Following {{following.count}} </p>
         <p class="btn btn-sm btn-outline-primary">Followers {{followers.count}} </p>
-        <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what’s most interesting in this post’s contents.</p>
         </div>
     </div>
     {% else %}
     <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
         <div class="col-md-6 px-0">
-        <h1 class="display-4 font-italic">{{ profile_user }}</h1>
-        <p class="btn btn-sm btn-outline-primary">Following {{following.count}} </p>
-        <p class="btn btn-sm btn-outline-primary">Followers {{followers.count}} </p>
-        <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what’s most interesting in this post’s contents.</p>
-        {% if follow_check %}
-            <a href="{% url 'follow_action' profile_user %}"> Unfollow </a>
-        {% else %}
-            <a href="{% url 'follow_action' profile_user %}"> Follow </a>
-        {% endif %}
+            <h1 class="display-4 font-italic">{{ profile_user }}</h1>
+            <p class="btn btn-sm btn-outline-primary">Following {{following.count}} </p>
+            <p class="btn btn-sm btn-outline-primary">Followers {{followers.count}} </p>
+        </div>
+        <div class="col-md-6 px-0">
+            {% if follow_check %}
+                <a href="{% url 'follow_action' profile_user %}"> Unfollow </a>
+            {% else %}
+                <a href="{% url 'follow_action' profile_user %}"> Follow </a>
+            {% endif %}
         </div>
     </div>
     {% endif %}

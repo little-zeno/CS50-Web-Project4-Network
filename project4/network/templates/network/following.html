@@ -1,0 +1,54 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+    <h3>Following Posts</h3>
+    {% for post in page_obj %}
+        <div class="row mb-2">
+            <div class="col-md-6">
+            <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                <a href="{% url 'profile' post.author %}"><strong class="d-inline-block mb-2 text-primary">{{ post.author|capfirst }}</strong></a>
+                <!-- <h3 class="mb-0">Featured post</h3> -->
+                <div class="mb-1 text-muted">{{ post.pub_date }}</div>
+                <p class="card-text mb-auto">{{ post.post_text }}</p>
+              
+                    <button type="submit" value="{{ logged_in_user }}" name="post_id" id="like-button-{{ post.id }}" onclick="like('{{post.id}}')" style=width:2em>
+                        {% if post in liked %}
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-heart-fill" style=fill:red;  id="like-svg-{{ post.id }}" xmlns="http://www.w3.org/2000/svg" >
+                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                        </svg>
+                        {% else %}
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-heart-fill" style=fill:black;  id="like-svg-{{ post.id }}" xmlns="http://www.w3.org/2000/svg" >
+                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                        </svg>
+                        {% endif %}
+                    </button>
+                    <strong id="like-count-{{ post.id }}">{{ post.likes.count }}Like(s)</strong>
+                </div>
+            </div>
+            </div>    
+        </div>
+    {% endfor %}
+    <div class="pagination">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                {% endif %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a></li>
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+{% endblock %}
