@@ -44,9 +44,11 @@
                 <div class="mb-1 text-muted">{{ post.pub_date }}</div>
                 <p class="card-text mb-auto" id="post-text-{{ post.id }}">{{ post.post_text }}</p>
                 <!-- Edit Post -->
+                {% if logged_in_user == profile_user %}
                 <textarea id="compose-view-{{ post.id }}" style=display:none; placeholder="Tweet"></textarea>
                 <input type="submit" id="compose-submit-{{ post.id }}" style=display:none; class="btn btn-primary"/>
                 <button class="btn btn-primary" id="edit-post-{{post.id}}" value="{{ post.id }}" onclick="edit('{{post.id}}')" style=width:10em>Edit Post</button>
+                {% endif %}
                 <!-- Like Action Manipulation -->
                 <button type="submit" value="{{ logged_in_user }}" name="post_id" id="like-button-{{ post.id }}" onclick="like('{{post.id}}')" style=width:2em>
                     {% if post in liked %}
